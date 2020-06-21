@@ -69,22 +69,24 @@ try:
             articleURLPatternChecker = re.compile('\/main\/[A-Za-z0-9]*')
             checkerBoolean = articleURLPatternChecker.match(articleURL)
             
-            # Variable : article Text 
+            # Article Text Scrape Here
+            
+            # Headline News's URL Type : Full URL 
+            # Other sections' News's URL Type : /main/~~~ 
             articText = None
             if checkerBoolean:
                 articText = getArticleMainText('https://news.naver.com' + articleURL)
             else:
                 articText = getArticleMainText(articleURL)
             capsule['article' + '_' +str(inf + 1)] = {
-                'articleTitle' : articlesInformation[inf].find('a').text.strip(),
+                'articleTitle' : articlesInformation[inf].find('a').text.strip().replace("\"","'"),
                 'url' : articleURL,
-                'articleText' : articText
+                'articleText' : articText.replace("\t","").replace("\n","").replace("\"","'")
             }
                 
         newsDatas[topicName] = capsule
     
     JSONConverter(newsDatas)
-
 except URLError as errormessageURL:
     print(errormessageURL)
 except HTTPError as errormessageHTTP:
