@@ -7,20 +7,50 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from urllib.request import URLError
 from urllib.request import HTTPError
+import requests
 import sys
 import time
 import re
 import json
 import time
+import asyncio
 
 # Save News Datas : Data include articles, title
 newsDatas = dict()
 # News Topics will be save here
 newsTopics = []
 
+def returnHyperTextAddingHeader(URL) -> BeautifulSoup:
+    session = requests.Session()
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit 537.36 (KHTML, like Gecko) Chrome",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+    }
+    html = session.get(URL,headers=headers).content 
+    html = BeautifulSoup(html,"html.parser")
+    return html
+
+#각 섹션별 기사URL에 대해 기사 출력
 def getArticleMainText(URL):
+    '''
     html = urlopen(URL)
     html = BeautifulSoup(html,'html.parser')
+    
+    왜 이부분을 주석처리하고 사용하지 않나요?
+
+    이 전에 다음과 같은 오류가 발생했었습니다.
+
+    http.client.RemoteDisconnected: Remote end closed connection without response
+
+    이러한 오류가 발생하는 이유는 요청을 받는 서버에서 요청을 비정상적이 요청으로 인지하고
+    차단하는 경우에 발생하게 된다. 물론 서버 마다 다르지만 이렇게 차단된 상태의 html을 출력해 보면
+    '비정상적인 요청에 따른 일시적 제한' 등의 글이 써져있는것을 볼 수 있다.
+
+    결론적으로 말하면 뷰봇과 같은 '봇'으로 인식을 한 것이다.
+    이렇게 봇으로 인식하는것을 방지하기 위해서는 패킷 header 정보에 User-Agent 정보를 넣어주면된다.
+    '''
+
+    html = returnHyperTextAddingHeader(URL)
     # 본문 내용은 id가 articleBodyContents 인 <div> 태그 안에있다.
     paragraphElements = re.sub(' +', ' ', html.find('div',{'id' : 'articleBodyContents'}).text).strip() # ' +' : white space가 한개 이상인 패턴을 찾는다.
     return paragraphElements
@@ -31,10 +61,7 @@ def JSONConverter(dataCapsule):
 
 try:
     naverNewsURL = 'https://news.naver.com/'
-    html = urlopen(naverNewsURL)
-    html = BeautifulSoup(html,'html.parser')
-    
-    
+    html = returnHyperTextAddingHeader(naverNewsURL)
     '''
     Get elements : About each news section. There are 7 sections. 
     
