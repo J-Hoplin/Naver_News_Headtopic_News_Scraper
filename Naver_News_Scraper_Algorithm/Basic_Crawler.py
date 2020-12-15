@@ -20,7 +20,7 @@ newsDatas = dict()
 # News Topics will be save here
 newsTopics = []
 
-def returnHyperTextAddingHeader(URL) -> BeautifulSoup:
+def returnHyperTextAddingHeader(URL):
     session = requests.Session()
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit 537.36 (KHTML, like Gecko) Chrome",
