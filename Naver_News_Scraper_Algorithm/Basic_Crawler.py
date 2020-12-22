@@ -37,22 +37,19 @@ def getArticleMainText(URL):
     html = BeautifulSoup(html,'html.parser')
     
     왜 이부분을 주석처리하고 사용하지 않나요?
-
     이 전에 다음과 같은 오류가 발생했었습니다.
-
     http.client.RemoteDisconnected: Remote end closed connection without response
-
     이러한 오류가 발생하는 이유는 요청을 받는 서버에서 요청을 비정상적이 요청으로 인지하고
     차단하는 경우에 발생하게 된다. 물론 서버 마다 다르지만 이렇게 차단된 상태의 html을 출력해 보면
     '비정상적인 요청에 따른 일시적 제한' 등의 글이 써져있는것을 볼 수 있다.
-
     결론적으로 말하면 뷰봇과 같은 '봇'으로 인식을 한 것이다.
     이렇게 봇으로 인식하는것을 방지하기 위해서는 패킷 header 정보에 User-Agent 정보를 넣어주면된다.
     '''
 
     html = returnHyperTextAddingHeader(URL)
     # 본문 내용은 id가 articleBodyContents 인 <div> 태그 안에있다.
-    paragraphElements = re.sub(' +', ' ', html.find('div',{'id' : 'articleBodyContents'}).text).strip() # ' +' : white space가 한개 이상인 패턴을 찾는다.
+    paragraphElements = re.sub('<script.*?>.*?</script>','',str(html.find('div',{'id' : 'articleBodyContents'})),0,re.I|re.S) # 0 : 부합되는 모든 문자열을 지우라는 의미,1을적으면 <script>만 지워지게됨 re.I (케이스 무시), re.S (점이 모든 문자와 일치) https://python.flowdas.com/library/re.html
+    paragraphElements = re.sub(' +', ' ',BeautifulSoup(paragraphElements,"html.parser").text).strip() # ' +' : white space가 한개 이상인 패턴을 찾는다. 불필요한 <script>를 없애기 위해 string으로 되었던것을 다시 bs4.element.tag type으로 변경해준다.
     return paragraphElements
     
 def JSONConverter(dataCapsule):
