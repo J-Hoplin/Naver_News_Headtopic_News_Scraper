@@ -14,4 +14,4 @@ Naver News Scraper : Topic by Topic
   - TODO : asyncio 모듈을 활용하여 비동기적 scraping 처리
 
 - 2021 / 01 / 05
-  - Bug fix : 불필요한 script tag의 주석 text가 기사문에 함께 반환되는것을 방지
+  - Bug fix : [불필요한 script tag의 주석 text가 기사문에 함께 반환되는것을 방지](https://github.com/J-hoplin1/Naver_News_Headtopic_News_Scraper/blob/0454da61755f1f69e0b507a242fb41fe6cf1e1e9/Naver_News_Scraper_Algorithm/Basic_Crawler.py#L51)
