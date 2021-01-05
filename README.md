@@ -12,3 +12,6 @@ Naver News Scraper : Topic by Topic
   - Bug fix : http.client.RemoteDisconnected: Remote end closed connection without response 라는 메세지의 에러가 발생
   - Fix : Header에 User-Agent값을 넣어서 봇으로 인식하는것을 방지
   - TODO : asyncio 모듈을 활용하여 비동기적 scraping 처리
+
+- 2021 / 01 / 05
+  - Bug fix : 불필요한 script tag의 주석 text가 기사문에 함께 반환되는것을 방지
